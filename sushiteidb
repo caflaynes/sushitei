@@ -1,0 +1,377 @@
+
+-- Create table for menus
+CREATE TABLE menus (
+    menu_id int PRIMARY KEY,
+    menu_name varchar(50) NOT NULL,
+    description text,
+    is_active boolean DEFAULT TRUE -- Indicates if the menu is currently active
+);
+
+
+-- Insert values for menus
+INSERT INTO menus (menu_id, menu_name, description, is_active)
+VALUES(1, 'Grand Menu', 'Our grand menu features Japanese offerings and innovative dishes using fresh and quality ingredients. A revolving selection of appetizers and sushi specials guarantee a new experience with each visit to our restaurants.', TRUE),
+      (2, 'Seasonal Menu', 'Each quarter, we present to you our seasonal menus that feature only the freshest produce and ingredients of the season.', FALSE),
+      (3, 'Take Away Menu', 'Enjoy your favorite Japanese cuisine Sushi Tei takeaway specials at home.', FALSE);
+
+-- Create table for categories
+CREATE TABLE categories (
+    category_id int,
+    category_name varchar(50) NOT NULL,
+    menu_id int DEFAULT 1, -- All products are within the Grand Menu which has a menu_id of 1. Thus, menu_id is set to 1 by default.
+    PRIMARY KEY (category_id),
+        FOREIGN KEY (menu_id) REFERENCES menus(menu_id)
+);
+
+-- Insert values for categories under Grand Menu
+INSERT INTO categories (category_id, category_name)
+VALUES(1, 'Appetisers'),
+      (2, 'Sushi Tei Special Rolls'),
+      (3, 'Kagoshima Specialties'),
+      (4, 'Sashimi'),
+      (5, 'Salads'),
+      (6, 'Sushi Moriawase'),
+      (7, 'Nigiri Sushi'),
+      (8, 'Gunkan Sushi'),
+      (9, 'Temaki'),
+      (10, 'Makimono'),
+      (11, 'Wanmono'),
+      (12, 'Tempura'),
+      (13, 'Agemono'),
+      (14, 'Nabemono'),
+      (15, 'Yakimono'),
+      (16, 'Noodles'),
+      (17, 'Donmono'),
+      (18, 'Desserts'),
+      (19, 'Drinks');
+      
+
+CREATE TABLE products (
+    product_id int,
+    product_name varchar(100) NOT NULL,
+    category_id int, 
+    description text,
+    price decimal(10, 2) NOT NULL, -- Product price
+    is_active boolean DEFAULT TRUE, -- Indicates if the product is currently available
+    PRIMARY KEY (product_id),
+        FOREIGN KEY (category_id) REFERENCES categories(category_id)
+);
+
+
+INSERT INTO products (product_id, product_name, description, price, category_id, is_active)
+VALUES(1, 'Pitan Tofu', 'century egg on organic tofu with special century egg sauce', 6.80, 1, TRUE),
+      (2, 'Onsen Tamago', 'half boiled hot spring egg', 2.30, 1, TRUE),
+      (3, 'Aburi Salmon Roll', 'crab meat, avocado & omelette sushi roll topped with half-broiled salmon', 15.80, 2, TRUE),
+      (4, 'Special Unagi Roll', 'omelette & cucumber sushi roll topped with eel', 24.80, 2, TRUE),
+      (5, 'Kagoshima Pork Katsu', 'japanese pork cutlet', 14.80, 3, TRUE),
+      (6, 'Kagoshima Wagyu Steak', 'pan-fried japanese wagyu steak', 39.80, 3, TRUE),
+      (7, 'Rishiri (5 Kinds)', 'salmon, salmon roe, sea urchin, surf clam & swordfish', 58.80, 4, TRUE),
+      (8, 'Asama (3 Kinds)', 'tuna, yellow-tail, & salmon', 23.00, 4, TRUE),
+      (9, 'Sashimi Salad', 'assorted sashimi & fresh vegetables', 12.80, 5, TRUE),
+      (10, 'Yakiniku Salad', 'pan-fried sliced beef with onion & fresh vegetables', 14.80, 5, TRUE),
+      (11, 'Hodaka (8pcs)', 'tuna, salmon, squid, octopus, surf clam, eel, sweet shrimp & salmon roe', 19.80, 6, TRUE),
+      (12, 'Seto (6pcs)', 'tuna belly, yellow-tail, swordfish, salmon belly, raw scallop & premium eel', 20.80, 6, TRUE),
+      (13, 'Ootoro Sushi', 'tuna belly', 9.80, 7, TRUE),
+      (14, 'Aburi Ootoro Sushi', 'half-broiled tuna belly', 10.00, 7, TRUE),
+      (15, 'Uni Ikura Sushi', 'sea urchin & salmon roe', 10.80, 8, TRUE),
+      (16, 'Uni Sushi', 'sea urchin', 13.80, 8, TRUE),
+      (17, 'Negitoro Temaki', 'minced tuna & spring onion', 6.80, 9, TRUE),
+      (18, 'California Temaki', 'avocado, crab meat & smelt roe', 4.80, 9, TRUE),
+      (19, 'Mini California Maki', 'avocado, cucumber, crab meat & omelette with smelt roe', 7.50, 10, TRUE),
+      (20, 'Negitoro Maki', 'minced tuna & spring onion', 6.50, 10, TRUE),
+      (21, 'Asari Sakamushi', 'asari clam with japanese sake', 14.80, 11, TRUE),
+      (22, 'Chawanmushi', 'steamed egg custard', 5.50, 11, TRUE),
+      (23, 'Tempura Moriawase', 'tempura assortment', 11.80, 12, TRUE),
+      (24, 'Hanasaki Ika Tempura', 'squid with smelt roe tempura', 9.80, 12, TRUE),
+      (25, 'Butterfly Shrimp', 'deep-fried prawn', 5.80, 13, TRUE),
+      (26, 'Hokkaido Corn Cream Croquette', '', 9.80, 13, TRUE),
+      (27, 'Sukiyaki', 'sliced beef, beancurd & vegetable with sweet soy-based soup', 19.80, 14, TRUE),
+      (28, 'Unagi Tamago Toji', 'eel with egg', 18.80, 14, TRUE),
+      (29, 'Ebi Mentaiyaki', 'grilled prawn with cod roe', 10.50, 15, TRUE),
+      (30, 'Unagi Kabayaki', 'grilled premium eel', 29.80, 15, TRUE),
+      (31, 'Kaisen Ramen', 'assorted seafood ramen', 17.80, 16, TRUE),
+      (32, 'Nabeyaki Udon', 'soup noodles with prawn tempura, chicken, egg & spring onion', 12.80, 16, TRUE),
+      (33, 'Salmon Ikura Don', 'salmon & salmon roe on sushi rice', 19.80, 17, TRUE),
+      (34, 'Tendon', 'assorted tempura on rice', 13.80, 17, TRUE),
+      (35, 'Orange Jelly', 'jelly made with orange flavor', 4.00, 18, TRUE),
+      (36, 'Grape Jelly', 'jelly made with grape flavor', 4.00, 18, TRUE),
+      (37, 'Ice Lemon Tea', 'refreshing iced tea with lemon flavor', 3.90, 19, TRUE),
+      (38, 'Suntory Oolong Tea', 'premium oolong tea', 3.90, 19, TRUE);
+
+-- Create table for customers
+CREATE TABLE customers (
+    customer_id int PRIMARY KEY,
+    first_name varchar(50) NOT NULL,
+    last_name varchar(50) NOT NULL,
+    email varchar(100) UNIQUE NOT NULL,
+    phone_number varchar(20),
+    address text
+);
+
+-- Insert values for customers table
+INSERT INTO customers (customer_id, first_name, last_name, email, phone_number, address)
+VALUES(1, 'Yssabelle', 'Nakagawa', 'ynakagawa@gmail.com', '91234567', '12 Orchard Road, Singapore 238841'),
+      (2, 'Riadyn', 'Laquite', 'rlaquite@gmail.com', '91234509', '1313 Ang Mo Kio Avenue, Singapore 560313'),
+      (3, 'Ainel', 'Bacus', 'abacus@yahoo.com', '91298712', '1414 Woodlands Drive, Singapore 730141'),
+      (4, 'Carlo', 'Laynes', 'claynes@gmail.com', '91234598', '1515 Bukit Batok Street, Singapore 650515'),
+      (5, 'Chaeyoung', 'Park', 'cpark@yahoo.com', '91298712', '90 Raffles Place, Singapore 048619'),
+      (6, 'Lalisa', 'Manoban', 'lmanoban@gmail.com', '91212312', '101 Bukit Timah Road, Singapore 229899'),
+      (7, 'Niki', 'Zefanya', 'nzefanya@yahoo.com', '91245612', '202 East Coast Parkway, Singapore 449876'),
+      (8, 'Olivia', 'Rodrigo', 'orodrigo@gmail.com', '91212389', '303 Jalan Besar, Singapore 208938'),
+      (9, 'Nhame', 'Chikamori', 'nchikamori@yahoo.com', '91245678', '404 Orchard Turn, Singapore 238801'),
+      (10, 'Eira', 'Albarado', 'ealbarado@gmail.com', '91298756', '505 Changi Road, Singapore 419943'),
+      (11, 'Princess', 'Leron', 'pleron@yahoo.com', '91234556', '606 Pasir Ris Drive, Singapore 510606'),
+      (12, 'Pia', 'Capulong', 'pcapulong@gmail.com', '91245634', '707 Toa Payoh Lorong, Singapore 310707'),
+      (13, 'Kyra', 'Famoso', 'kfamoso@yahoo.com', '91278945', '808 Tanjong Pagar Road, Singapore 088507'),
+      (14, 'Trisha', 'Talagtag', 'ttalagtag@gmail.com', '91212389', '909 Serangoon Road, Singapore 328206'),
+      (15, 'Aidee', 'Ende', 'aende@yahoo.com', '91212367', '1010 Lavender Street, Singapore 338729'),
+      (16, 'Samantha', 'Magdangal', 'smagdangal@gmail.com', '91234509', '1111 Simei Street, Singapore 520111'),
+      (17, 'Shohei', 'Ohtani', 'sohtani@yahoo.com', '91298701', '1212 Yishun Avenue, Singapore 760121'),
+      (18, 'Uno', 'Baran', 'ubaran@yahoo.com', '91298765', '34 Marina Bay Sands Avenue, Singapore 018956'),
+      (19, 'Jisoo', 'Kim', 'jskim@gmail.com', '91234512', '56 Sentosa Gateway, Singapore 098269'),
+      (20, 'Jennie', 'Kim', 'jrjkim@gmail.com', '91223445', '78 Clarke Quay Road, Singapore 179884');
+
+
+CREATE TABLE orders (
+    order_id int,
+    customer_id int NOT NULL,
+    order_date datetime,
+    delivery_fee decimal(10, 2) DEFAULT 5.00, -- Fixed delivery fee
+    gst_amount decimal(10, 2) DEFAULT 0, -- The formula for the 8% Goods and Services Tax(GST) is [gst_amount = total_amount * 0.008]
+    total_amount decimal(10, 2) NOT NULL DEFAULT 0, -- total amount for the order is initialized with 0. There's no need to insert value.
+    PRIMARY KEY (order_id),
+        FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+
+
+INSERT INTO orders (order_id, customer_id, order_date) 
+VALUES(1, 1, '2024-10-01 12:30:45'),   -- OrderID 1: 63.20 + 34.00 + 49.60 + 44.40 = 191.20
+      (2, 2, '2024-10-01 13:15:30'),  -- OrderID 2: 119.40
+      (3, 3, '2024-10-02 14:45:20'),  -- OrderID 3: 99.20 + 44.40 + 25.60 = 169.20
+      (4, 4, '2024-10-03 11:00:00'),  -- OrderID 4: 117.60
+      (5, 5, '2024-10-03 15:20:10'),  -- OrderID 5: 23.00 + 115.00 = 138.00
+      (6, 6, '2024-10-04 16:50:35'),  -- OrderID 6: 249.60
+      (7, 7, '2024-10-05 10:10:10'),  -- OrderID 7: 128.00 + 148.00 = 276.00
+      (8, 8, '2024-10-05 12:45:55'),  -- OrderID 8: 99.00 + 104.00 = 203.00
+      (9, 9, '2024-10-06 13:35:20'),  -- OrderID 9: 198.00 + 106.80 = 304.80
+      (10, 10, '2024-10-06 14:10:00'), -- OrderID 10: 133.20 + 110.40 = 243.60
+      (11, 11, '2024-10-07 18:20:00'),  -- OrderID 11: 83.20
+      (12, 12, '2024-10-08 09:05:15'), -- OrderID 12: 102.40
+      (13, 13, '2024-10-08 11:15:45'), -- OrderID 13: 208.60
+      (14, 14, '2024-10-09 14:55:25'),  -- OrderID 14: 52.80
+      (15, 15, '2024-10-10 16:40:50'),   -- OrderID 15: 94.00
+      (16, 16, '2024-10-10 17:25:10'),   -- OrderID 16: 88.20
+      (17, 17, '2024-10-11 19:30:40'), -- OrderID 17: 102.40
+      (18, 18, '2024-10-12 14:40:00'),   -- OrderID 18: 63.00
+      (19, 19, '2024-10-13 11:15:20'),   -- OrderID 19: 83.20
+      (20, 20, '2024-10-13 13:30:30');   -- OrderID 20: 44.40
+
+
+
+CREATE TABLE order_items (
+    order_item_id int,
+    order_id int,
+    product_id int,
+    quantity int NOT NULL,
+    unit_price decimal(10, 2) NOT NULL,
+    total_price decimal(10, 2) DEFAULT 0, -- Total Price per Product is set to 0. Inserting a value is not required. This column will be updated later on based on the Quantity * Price formula
+    PRIMARY KEY (order_item_id),
+        FOREIGN KEY (order_id) REFERENCES orders(order_id),
+        FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+
+
+INSERT INTO order_items (order_item_id, order_id, product_id, quantity, unit_price) 
+-- NOTE: Total price set 0 by default only serves as a placeholder.
+
+                                     -- Product Name  |  Quantity * Price = Total Price per Product
+                                     
+      -- ORDER 1
+VALUES(1, 1, 3, 4, 15.80),        -- Aburi Salmon Roll: 4 * 15.80 = 63.20
+      (2, 1, 1, 5, 6.80),         -- Pitan Tofu: 5 * 6.80 = 34.00
+      (3, 1, 4, 2, 24.80),        -- Special Unagi Roll: 2 * 24.80 = 49.60
+      (4, 1, 5, 3, 14.80),        -- Kagoshima Pork Katsu: 3 * 14.80 = 44.40
+      -- ORDER 2
+      (5, 2, 6, 3, 39.80),        -- Kagoshima Wagyu Steak: 3 * 39.80 = 119.40
+      -- ORDER 3
+      (6, 3, 4, 4, 24.80),        -- Special Unagi Roll: 4 * 24.80 = 99.20
+      (7, 3, 5, 3, 14.80),        -- Kagoshima Pork Katsu: 3 * 14.80 = 44.40
+      (8, 3, 9, 2, 12.80),        -- Sashimi Salad: 2 * 12.80 = 25.60
+      -- ORDER 4
+      (9, 4, 7, 2, 58.80),         -- Rishiri (5 Kinds): 2 * 58.80 = 117.60
+      -- ORDER 5
+      (10, 5, 2, 10, 2.30),         -- Onsen Tamago: 10 * 2.30 = 23.00
+      (11, 5, 8, 5, 23.00),         -- Asama (3 Kinds): 5 * 23.00 = 115.00
+      
+      -- ORDER 6
+      (12, 6, 12, 12, 20.80),       -- Seto (6pcs): 12 * 20.80 = 249.60
+      
+      -- ORDER 7
+      (13, 7, 9, 10, 12.80),        -- Sashimi Salad: 10 * 12.80 = 128.00
+      (14, 7, 10, 10, 14.80),       -- Yakiniku Salad: 10 * 14.80 = 148.00
+      
+      -- ORDER 8
+      (15, 8, 11, 5, 19.80),        -- Hodaka (8pcs): 5 * 19.80 = 99.00
+      (16, 8, 12, 5, 20.80),        -- Seto (6pcs): 5 * 20.80 = 104.00
+      
+      -- ORDER 9
+      (17, 9, 33, 10, 19.80),       -- Salmon Ikura Don: 10 * 19.80 = 198.00
+      
+      -- ORDER 10
+      (18, 10, 31, 6, 17.80),       -- Kaisen Ramen: 6 * 17.80 = 106.80
+      
+      -- ORDER 11
+      (19, 11, 21, 9, 14.80),       -- Asari Sakamushi: 9 * 14.80 = 133.20
+      
+      -- ORDER 12
+      (20, 12, 16, 8, 13.80),       -- Uni Sushi: 8 * 13.80 = 110.40
+      
+      -- ORDER 13
+      (21, 13, 30, 7, 29.80),       -- Unagi Kabayaki: 7 * 29.80 = 208.60
+      
+      -- ORDER 14
+      (22, 14, 18, 11, 4.80),       -- California Temaki: 11 * 4.80 = 52.80
+      
+      -- ORDER 15
+      (23, 15, 28, 5, 18.80),       -- Unagi Tamago Toji: 5 * 18.80 = 94.00
+      
+      -- ORDER 16
+      (24, 16, 13, 9, 9.80),        -- Ootoro Sushi: 9 * 9.80 = 88.20
+      
+      -- ORDER 17
+      (25, 17, 9, 8, 12.80),        -- Sashimi Salad: 8 * 12.80 = 102.40
+      
+      -- ORDER 18
+      (26, 18, 29, 6, 10.50),       -- Ebi Mentaiyaki: 6 * 10.50 = 63.00
+      
+      -- ORDER 19
+      (27, 19, 12, 4, 20.80),       -- Seto (6pcs): 4 * 20.80 = 83.20
+      
+      -- ORDER 20
+      (28, 20, 10, 3, 14.80);       -- Yakiniku Salad: 3 * 14.80 = 44.40
+      
+      
+
+-- Step 1: UPDATE the total price — per product in the order_items table
+UPDATE order_items
+SET total_price = quantity * unit_price;
+
+-- Step 2: UPDATE the total amount — per order based on the SUM of total_price from the order_items table
+UPDATE orders
+SET total_amount = (
+    SELECT SUM(total_price)
+    FROM order_items
+    WHERE order_items.order_id = orders.order_id
+)
+WHERE order_id IN (
+    SELECT DISTINCT order_id
+    FROM order_items
+);
+
+-- Step 3: CALCULATE the GST amount (9%) — per order
+UPDATE orders
+SET gst_amount = total_amount * 0.09;
+
+-- Step 4: UPDATE the total amount — include the GST amount and the fixed delivery fee
+UPDATE orders
+SET total_amount = total_amount + gst_amount + delivery_fee;
+
+
+
+
+CREATE TABLE checkouts (
+  checkout_id int,
+  order_id int,
+  payment_method varchar(20),
+  payment_status ENUM('Paid', 'Pending') DEFAULT 'Pending',  -- restricting to Paid and Pending
+  checkout_date datetime,
+  PRIMARY KEY (checkout_id),
+  FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+INSERT INTO checkouts (checkout_id, order_id, payment_method, payment_status, checkout_date) VALUES
+(1, 1, 'Credit Card', 'Paid', '2024-10-10 14:30:00'),
+(2, 2, 'PayPal', 'Pending', '2024-10-11 10:15:00'),
+(3, 3, 'Debit Card', 'Paid', '2024-10-12 09:45:00'),
+(4, 4, 'Cash', 'Pending', '2024-10-13 16:00:00'),
+(5, 5, 'Credit Card', 'Paid', '2024-10-14 12:00:00'),
+(6, 6, 'Debit Card', 'Pending', '2024-10-15 08:00:00'),
+(7, 7, 'Credit Card', 'Paid', '2024-10-15 13:30:00'),
+(8, 8, 'PayPal', 'Pending', '2024-10-16 11:00:00'),
+(9, 9, 'Cash', 'Paid', '2024-10-17 15:45:00'),
+(10, 10, 'Credit Card', 'Pending', '2024-10-18 09:30:00'),
+(11, 11, 'Debit Card', 'Paid', '2024-10-19 10:15:00'),
+(12, 12, 'PayPal', 'Pending', '2024-10-20 14:00:00'),
+(13, 13, 'Cash', 'Paid', '2024-10-21 16:30:00'),
+(14, 14, 'Credit Card', 'Pending', '2024-10-22 12:45:00'),
+(15, 15, 'Debit Card', 'Paid', '2024-10-23 13:00:00'),
+(16, 16, 'PayPal', 'Pending', '2024-10-24 11:15:00'),
+(17, 17, 'Cash', 'Paid', '2024-10-25 09:30:00'),
+(18, 18, 'Credit Card', 'Pending', '2024-10-26 10:00:00'),
+(19, 19, 'Debit Card', 'Paid', '2024-10-27 12:30:00'),
+(20, 20, 'PayPal', 'Pending', '2024-10-28 14:45:00');
+
+
+
+
+
+-- SELECT orders with total amount >= 200
+SELECT * FROM orders WHERE total_amount >= 200;
+
+-- To display products ordered by a specific customer:
+SELECT c.customer_id, p.product_name, p.price, oi.quantity, oi.total_price
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_items oi ON o.order_id = oi.order_id
+JOIN products p ON oi.product_id = p.product_id
+WHERE o.customer_id BETWEEN 1 AND 10;
+
+
+
+
+
+-- SELECT * FROM menus;
+-- SELECT * FROM categories;
+-- SELECT * FROM products;
+-- SELECT * FROM customers;
+-- SELECT * FROM orders;
+-- SELECT * FROM order_items;
+
+
+
+
+-- -- To display active menus:
+-- SELECT menu_id, menu_name, description 
+-- FROM menus 
+-- WHERE is_active = FALSE;
+
+-- -- To display categories and their menus:
+-- SELECT categories.category_id, categories.category_name, menus.menu_name
+-- FROM categories
+-- JOIN menus ON categories.menu_id = menus.menu_id;
+
+-- -- To display all products and their categories:
+-- SELECT products.product_id, products.product_name, products.description, products.price, categories.category_name
+-- FROM products
+-- JOIN categories ON products.category_id = categories.category_id;
+
+-- -- To display available products:
+-- SELECT product_id, product_name, description, price
+-- FROM products
+-- WHERE is_active = TRUE;
+
+-- -- To display products in an order:
+-- SELECT order_items.order_id, products.product_name, order_items.quantity, products.price
+-- FROM order_items
+-- JOIN products ON order_items.product_id = products.product_id
+-- WHERE order_items.order_id = 1; -- replace with specific order_id
+
+-- -- To display orders with date range:
+-- SELECT order_id, customer_id, order_date, total_amount
+-- FROM orders
+-- WHERE order_date BETWEEN '2024-10-01' AND '2024-10-05';
+
+-- SELECT products.product_id, products.product_name, products.price
+-- FROM products;
+
