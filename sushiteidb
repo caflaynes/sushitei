@@ -2,7 +2,7 @@
 -- Create table for menus
 CREATE TABLE menus (
     menu_id int PRIMARY KEY,
-    menu_name varchar(50) NOT NULL,
+    menu_name varchar(20) NOT NULL,
     description text,
     is_active boolean DEFAULT TRUE -- Indicates if the menu is currently active
 );
@@ -48,7 +48,7 @@ VALUES(1, 'Appetisers'),
 
 CREATE TABLE products (
     product_id int,
-    product_name varchar(100) NOT NULL,
+    product_name varchar(50) NOT NULL,
     category_id int, 
     description text,
     price decimal(10, 2) NOT NULL, -- Product price
@@ -253,11 +253,13 @@ VALUES(1, 1, 3, 4, 15.80),        -- Aburi Salmon Roll: 4 * 15.80 = 63.20
       
       
 
--- Step 1: UPDATE the total price — per product in the order_items table
+-- STEPS to Calculate the total_amount for each order with GST and Delivery Fee:
+
+-- Step 1: Updates total_price for each product FROM order_items table
 UPDATE order_items
 SET total_price = quantity * unit_price;
 
--- Step 2: UPDATE the total amount — per order based on the SUM of total_price from the order_items table
+-- Step 2: Updates total_amount for each order BASED ON the SUM of total_price FROM the order_items table
 UPDATE orders
 SET total_amount = (
     SELECT SUM(total_price)
@@ -269,57 +271,62 @@ WHERE order_id IN (
     FROM order_items
 );
 
--- Step 3: CALCULATE the GST amount (9%) — per order
+-- Step 3: Calculates the GST amount (9%) — for each order
 UPDATE orders
 SET gst_amount = total_amount * 0.09;
 
--- Step 4: UPDATE the total amount — include the GST amount and the fixed delivery fee
+-- Step 4: Updates total_amount, including the GST amount and the fixed delivery fee
 UPDATE orders
 SET total_amount = total_amount + gst_amount + delivery_fee;
-
 
 
 
 CREATE TABLE checkouts (
   checkout_id int,
   order_id int,
-  payment_method varchar(20),
+  payment_method ENUM('Credit Card', 'Paypal', 'Debit Card', 'Cash') DEFAULT 'Cash',
   payment_status ENUM('Paid', 'Pending') DEFAULT 'Pending',  -- restricting to Paid and Pending
   checkout_date datetime,
   PRIMARY KEY (checkout_id),
   FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
-INSERT INTO checkouts (checkout_id, order_id, payment_method, payment_status, checkout_date) VALUES
-(1, 1, 'Credit Card', 'Paid', '2024-10-10 14:30:00'),
-(2, 2, 'PayPal', 'Pending', '2024-10-11 10:15:00'),
-(3, 3, 'Debit Card', 'Paid', '2024-10-12 09:45:00'),
-(4, 4, 'Cash', 'Pending', '2024-10-13 16:00:00'),
-(5, 5, 'Credit Card', 'Paid', '2024-10-14 12:00:00'),
-(6, 6, 'Debit Card', 'Pending', '2024-10-15 08:00:00'),
-(7, 7, 'Credit Card', 'Paid', '2024-10-15 13:30:00'),
-(8, 8, 'PayPal', 'Pending', '2024-10-16 11:00:00'),
-(9, 9, 'Cash', 'Paid', '2024-10-17 15:45:00'),
-(10, 10, 'Credit Card', 'Pending', '2024-10-18 09:30:00'),
-(11, 11, 'Debit Card', 'Paid', '2024-10-19 10:15:00'),
-(12, 12, 'PayPal', 'Pending', '2024-10-20 14:00:00'),
-(13, 13, 'Cash', 'Paid', '2024-10-21 16:30:00'),
-(14, 14, 'Credit Card', 'Pending', '2024-10-22 12:45:00'),
-(15, 15, 'Debit Card', 'Paid', '2024-10-23 13:00:00'),
-(16, 16, 'PayPal', 'Pending', '2024-10-24 11:15:00'),
-(17, 17, 'Cash', 'Paid', '2024-10-25 09:30:00'),
-(18, 18, 'Credit Card', 'Pending', '2024-10-26 10:00:00'),
-(19, 19, 'Debit Card', 'Paid', '2024-10-27 12:30:00'),
-(20, 20, 'PayPal', 'Pending', '2024-10-28 14:45:00');
+INSERT INTO checkouts (checkout_id, order_id, payment_method, payment_status, checkout_date) 
+VALUES(1, 1, 'Credit Card', 'Paid', '2024-10-10 14:30:00'),
+      (2, 2, 'PayPal', 'Pending', '2024-10-11 10:15:00'),
+      (3, 3, 'Debit Card', 'Paid', '2024-10-12 09:45:00'),
+      (4, 4, 'Cash', 'Pending', '2024-10-13 16:00:00'),
+      (5, 5, 'Credit Card', 'Paid', '2024-10-14 12:00:00'),
+      (6, 6, 'Debit Card', 'Pending', '2024-10-15 08:00:00'),
+      (7, 7, 'Credit Card', 'Paid', '2024-10-15 13:30:00'),
+      (8, 8, 'PayPal', 'Pending', '2024-10-16 11:00:00'),
+      (9, 9, 'Cash', 'Paid', '2024-10-17 15:45:00'),
+      (10, 10, 'Credit Card', 'Pending', '2024-10-18 09:30:00'),
+      (11, 11, 'Debit Card', 'Paid', '2024-10-19 10:15:00'),
+      (12, 12, 'PayPal', 'Pending', '2024-10-20 14:00:00'),
+      (13, 13, 'Cash', 'Paid', '2024-10-21 16:30:00'),
+      (14, 14, 'Credit Card', 'Pending', '2024-10-22 12:45:00'),
+      (15, 15, 'Debit Card', 'Paid', '2024-10-23 13:00:00'),
+      (16, 16, 'PayPal', 'Pending', '2024-10-24 11:15:00'),
+      (17, 17, 'Cash', 'Paid', '2024-10-25 09:30:00'),
+      (18, 18, 'Credit Card', 'Pending', '2024-10-26 10:00:00'),
+      (19, 19, 'Debit Card', 'Paid', '2024-10-27 12:30:00'),
+      (20, 20, 'PayPal', 'Pending', '2024-10-28 14:45:00');
 
 
+-- All tables
+SELECT * FROM menus;
+SELECT * FROM categories;
+SELECT * FROM products;
+SELECT * FROM customers;
+SELECT * FROM orders;
+SELECT * FROM order_items;
 
 
-
--- SELECT orders with total amount >= 200
+-- Selects orders with a total exceeding 200.00 SGD
 SELECT * FROM orders WHERE total_amount >= 200;
 
--- To display products ordered by a specific customer:
+-- Displayes all products ordered by a specific customer or more:
 SELECT c.customer_id, p.product_name, p.price, oi.quantity, oi.total_price
 FROM customers c
 JOIN orders o ON c.customer_id = o.customer_id
@@ -327,17 +334,42 @@ JOIN order_items oi ON o.order_id = oi.order_id
 JOIN products p ON oi.product_id = p.product_id
 WHERE o.customer_id BETWEEN 1 AND 10;
 
+-- Selects the product with highest number of items sold
+SELECT products.product_id, products.product_name, best_seller.total_quantity
+FROM products
+JOIN (
+    SELECT product_id, SUM(quantity) AS total_quantity
+    FROM order_items
+    GROUP BY product_id
+    ORDER BY total_quantity DESC
+    LIMIT 1
+) AS best_seller
+ON products.product_id = best_seller.product_id;
 
 
-
-
--- SELECT * FROM menus;
--- SELECT * FROM categories;
--- SELECT * FROM products;
--- SELECT * FROM customers;
--- SELECT * FROM orders;
--- SELECT * FROM order_items;
-
+-- Retrieves customer and order details, including product information, quantities, prices, taxes, and total costs for each order.
+SELECT 
+    c.customer_id,
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+    o.order_id,
+    o.order_date,
+    GROUP_CONCAT(p.product_name) AS ordered_items,  -- Get product names from products table
+    GROUP_CONCAT(oi.quantity) AS quantity,
+    GROUP_CONCAT(oi.unit_price) AS unit_price,
+    SUM(oi.total_price) AS total_price,
+    SUM(oi.total_price) * 0.09 AS gst_tax,  -- Calculate GST as 9% of total price
+    o.delivery_fee,
+    SUM(oi.total_price) + (SUM(oi.total_price) * 0.09) + o.delivery_fee AS grand_total -- Calculate grand total price
+FROM 
+    customers AS c
+JOIN 
+    orders AS o ON c.customer_id = o.customer_id
+JOIN 
+    order_items AS oi ON o.order_id = oi.order_id
+JOIN 
+    products AS p ON oi.product_id = p.product_id  -- Join to get product names
+GROUP BY 
+    o.order_id, c.customer_id, customer_name, o.order_date, o.delivery_fee;  -- Group by all selected non-aggregated columns
 
 
 
